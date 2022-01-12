@@ -1,6 +1,7 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, View, Image, Text } from "react-native";
-import PropTypes from 'prop-types'
+import React from 'react';
+import {StyleSheet, TouchableOpacity, View, Image, Text} from 'react-native';
+import PropTypes from 'prop-types';
+import {uploadsUrl} from '../utils/variables';
 
 const ListItem = (prop) => {
   return (
@@ -8,7 +9,7 @@ const ListItem = (prop) => {
       <View style={styles.imagebox}>
         <Image
           style={styles.image}
-          source={{uri: prop.singleMedia.thumbnails.w160}}
+          source={{uri: uploadsUrl + prop.singleMedia.thumbnails.w160}}
         />
       </View>
       <View style={styles.textbox}>
@@ -16,8 +17,8 @@ const ListItem = (prop) => {
         <Text>{prop.singleMedia.description}</Text>
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   row: {
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    flex:1,
+    flex: 1,
     borderRadius: 6,
   },
   textbox: {
