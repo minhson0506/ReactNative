@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 15,
     backgroundColor: '#eee',
-    borderRadius: 6,
     marginHorizontal: 10,
     marginBottom: 5,
   },
@@ -34,15 +33,17 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    borderRadius: 6,
+    borderBottomLeftRadius: 40,
+    borderTopLeftRadius: 5,
   },
   textbox: {
-    flex: 2,
+    flex: 1,
     padding: 10,
   },
   listTitle: {
+    color: '#e65',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 30,
     paddingBottom: 15,
   },
 });
