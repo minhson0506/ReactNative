@@ -1,18 +1,12 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView } from 'react-native';
-import GlobalStyles from './utils/GlobalStyles';
-import List from './components/List';
+import {StatusBar} from 'expo-status-bar';
+import Navigator from './navigators/Navigator';
 
 const App = () => {
   return (
     <>
-    <SafeAreaView style={GlobalStyles.AndroidSafeArea}>
-      <List>
-
-      </List>
-    </SafeAreaView>
-    <StatusBar style="auto" />
+      <Navigator></Navigator>
+      <StatusBar style="auto" />
     </>
   );
 };
