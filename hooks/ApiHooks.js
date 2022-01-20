@@ -35,4 +35,91 @@ const useMedia = () => {
   return {mediaArray};
 };
 
-export {useMedia};
+const useLogin = () => {
+  const postLogin = async (userCredentials) => {
+    const options = {
+      // TODO: add method, headers and body for sending json data with POST
+      method: 'POST',
+      // mode: 'cors',
+      // cache: 'no-cache',
+      // credentials: 'same-origin',
+      headers: {'Content-Type': 'application/json'},
+      // redirect: 'follow',
+      // referrerPolicy: 'no-referrer',
+      body: JSON.stringify(userCredentials),
+    };
+    try {
+      // TODO: use fetch to send request to login endpoint and return the result as json, handle errors with try/catch and response.ok
+      const response = await fetch(baseUrl + 'login', options);
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      const userData = await response.json();
+      console.log('login ' + userData);
+      return userData;
+      // fetch('https://example.com/profile', {
+      //   method: 'POST', // or 'PUT'
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(data),
+      // })
+      //   .then((response) => response.json())
+      //   .then((data) => {
+      //     console.log('Success:', data);
+      //   })
+      //   .catch((error) => {
+      //     console.error('Error:', error);
+      //   });
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  };
+
+  return {postLogin};
+};
+
+const useUser = () => {
+  const getUserByToken = async (token) => {
+    try {
+      const options = {
+        method: 'GET',
+        headers: {'x-access-token': token},
+      };
+      const response = await fetch(baseUrl + 'users/user', options);
+      const userData = await response.json();
+      if (response.ok) {
+        return userData;
+      } else {
+        throw new Error(userData.message);
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  const postUser = async (data) => {
+    const options = {
+      // TODO: add method, headers and body for sending json data with POST
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    };
+    try {
+      // TODO: use fetch to send request to users endpoint and return the result as json, handle errors with try/catch and response.ok
+      const response = await fetch(baseUrl + 'users', options);
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      const userData = await response.json();
+      console.log('register ' + userData);
+      return userData;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  return {getUserByToken, postUser};
+};
+
+export {useMedia, useLogin, useUser};

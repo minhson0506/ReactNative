@@ -1,24 +1,37 @@
 import React, {useContext, useEffect} from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useLogin, useUser} from '../hooks/ApiHooks';
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
 const Login = ({navigation}) => {
-  const {setIsLoggedIn} = useContext(MainContext);
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
+  const {postLogin} = useLogin();
+  const {getUserByToken} = useUser();
 
   const checkToken = async () => {
     // TODO: save the value of userToken saved in AsyncStorage as userToken
-    let userToken = null;
     try {
-      userToken = await AsyncStorage.getItem('userToken');
-    } catch (err) {
-      console.log(err);
-    }
-    console.log('token', userToken);
-    // TODO if the content of userToken is 'abc'), set isLoggedIn to true and navigate to Tabs
-    if (userToken === 'abc') {
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (!userToken) return;
+      console.log('token', userToken);
+      const userData = await getUserByToken(userToken);
+      console.log('checkToken', userData);
+      setUser(userData);
       setIsLoggedIn(true);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -27,22 +40,37 @@ const Login = ({navigation}) => {
   }, []);
 
   // props is needed for navigation
-  const logIn = async () => {
-    console.log('Button pressed');
-    //call Api with user and get token as response
-    //now we use a dummy token
-    try {
-      await AsyncStorage.setItem('userToken', 'abc');
-    } catch (err) {
-      console.log(err);
-    }
-    setIsLoggedIn(true);
-  };
+  // const logIn = async () => {
+  //   console.log('Button pressed');
+  //   // hard code user and pass
+  //   const data = {username: 'SonDang', password: '123456a@'};
+  //   // call postlogin
+  //   try {
+  //     const userData = await postLogin(data);
+  //     // if login sucessfull fo the following
+  //     //call Api with user and get token as response
+  //     await AsyncStorage.setItem('userToken', userData.token);
+  //     setIsLoggedIn(true);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
   return (
-    <View style={styles.container}>
-      <Text>Login</Text>
-      <Button title="Sign in!" onPress={logIn} />
-    </View>
+    <TouchableOpacity
+      style={{flex: 1}}
+      activeOpacity={1}
+      onPress={() => Keyboard.dismiss()}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : ''}
+        style={styles.container}
+      >
+        <Text>Login</Text>
+        <LoginForm></LoginForm>
+        <RegisterForm></RegisterForm>
+        {/* <Button title="Sign in!" onPress={logIn} /> */}
+      </KeyboardAvoidingView>
+    </TouchableOpacity>
   );
 };
 
