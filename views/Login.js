@@ -1,27 +1,24 @@
 import React, {useContext, useEffect} from 'react';
 import {
   StyleSheet,
-  View,
   Text,
-  Button,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useLogin, useUser} from '../hooks/ApiHooks';
+import {useUser} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
-  const {postLogin} = useLogin();
   const {getUserByToken} = useUser();
 
   const checkToken = async () => {
-    // TODO: save the value of userToken saved in AsyncStorage as userToken
     try {
       const userToken = await AsyncStorage.getItem('userToken');
       if (!userToken) return;
@@ -39,22 +36,6 @@ const Login = ({navigation}) => {
     checkToken();
   }, []);
 
-  // props is needed for navigation
-  // const logIn = async () => {
-  //   console.log('Button pressed');
-  //   // hard code user and pass
-  //   const data = {username: 'SonDang', password: '123456a@'};
-  //   // call postlogin
-  //   try {
-  //     const userData = await postLogin(data);
-  //     // if login sucessfull fo the following
-  //     //call Api with user and get token as response
-  //     await AsyncStorage.setItem('userToken', userData.token);
-  //     setIsLoggedIn(true);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
   return (
     <TouchableOpacity
       style={{flex: 1}}
@@ -68,7 +49,6 @@ const Login = ({navigation}) => {
         <Text>Login</Text>
         <LoginForm></LoginForm>
         <RegisterForm></RegisterForm>
-        {/* <Button title="Sign in!" onPress={logIn} /> */}
       </KeyboardAvoidingView>
     </TouchableOpacity>
   );

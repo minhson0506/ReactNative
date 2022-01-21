@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
-import {Text, View, TextInput, Button, Alert} from 'react-native';
+import {Text, View, TextInput, Button} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useLogin, useUser} from '../hooks/ApiHooks';
+import {useLogin} from '../hooks/ApiHooks';
 
 const LoginForm = () => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);

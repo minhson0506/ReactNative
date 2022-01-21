@@ -14,11 +14,7 @@ const Stack = createNativeStackNavigator();
 const TabScreen = () => {
   return (
     <Tab.Navigator>
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        //options={{headerShown: false}}
-      ></Tab.Screen>
+      <Tab.Screen name="Home" component={Home}></Tab.Screen>
       <Tab.Screen name="Profile" component={Profile}></Tab.Screen>
     </Tab.Navigator>
   );
