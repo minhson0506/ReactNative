@@ -103,7 +103,7 @@ const useTag = () => {
     return await doFetch(baseUrl + 'tags/' + tag);
   };
 
-  return {postTag, getFileByTag};
+  return {postTag, getFileByTag, postTag};
 };
 
 export {useMedia, useLogin, useUser, useTag};
