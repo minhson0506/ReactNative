@@ -18,6 +18,6 @@ const List = ({navigation}) => {
   );
 };
 
-List.propTypes = {navigation: PropTypes.object};
+List.propTypes = {navigation: PropTypes.object.isRequired};
 
 export default List;

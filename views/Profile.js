@@ -1,9 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, SafeAreaView, Text, Button, Image} from 'react-native';
+import {ActivityIndicator, StyleSheet} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTag} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
+import {Avatar, Button, Card, ListItem, Text} from 'react-native-elements';
 
 const Profile = () => {
   const {setIsLoggedIn, user} = useContext(MainContext);
@@ -47,29 +48,30 @@ const Profile = () => {
 
   console.log('Profile', user);
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Profile</Text>
-      <Text>{user.username}</Text>
-      <Image
+    <Card>
+      <Card.Title>
+        <Text h1>{user.username}</Text>
+      </Card.Title>
+      <Card.Image
         source={{uri: avatar}}
-        style={{width: '90%', height: '80%'}}
-        resizeMode="contain"
-      ></Image>
-      <Text>{user.email}</Text>
-      <Text>{user.full_name}</Text>
-      <Button title="Log out!" onPress={logOut}></Button>
-    </SafeAreaView>
+        style={styles.image}
+        PlaceholderContent={<ActivityIndicator></ActivityIndicator>}
+      />
+      <ListItem>
+        <Avatar icon={{name: 'email', color: 'black'}} />
+        <Text>{user.email}</Text>
+      </ListItem>
+      <ListItem>
+        <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}} />
+        <Text>{user.full_name}</Text>
+      </ListItem>
+      <Button title={'Logout'} onPress={logOut} />
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 40,
-  },
+  image: {width: '100%', height: undefined, aspectRatio: 1},
 });
 
 export default Profile;

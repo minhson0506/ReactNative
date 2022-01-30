@@ -3,6 +3,7 @@ import {SafeAreaView} from 'react-native';
 import GlobalStyles from '../utils/GlobalStyles';
 import List from '../components/List';
 import PropTypes from 'prop-types';
+import {StatusBar} from 'expo-status-bar';
 
 const Home = ({navigation}) => {
   return (
@@ -10,6 +11,7 @@ const Home = ({navigation}) => {
       <SafeAreaView style={GlobalStyles.AndroidSafeArea}>
         <List navigation={navigation}></List>
       </SafeAreaView>
+      <StatusBar style="auto"></StatusBar>
     </>
   );
 };

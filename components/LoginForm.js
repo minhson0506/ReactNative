@@ -19,6 +19,7 @@ const LoginForm = () => {
       password: '',
     },
   });
+
   const onSubmit = async (data) => {
     console.log(data);
     try {
@@ -41,7 +42,6 @@ const LoginForm = () => {
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
-            style={{borderWidth: 1}}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -60,7 +60,6 @@ const LoginForm = () => {
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
-            style={{borderWidth: 1}}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -72,7 +71,7 @@ const LoginForm = () => {
         name="password"
       />
       {errors.username && <Text>This is required.</Text>}
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+      <Button title="Sign in" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 };

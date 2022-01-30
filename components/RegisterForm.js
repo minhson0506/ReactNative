@@ -36,7 +36,6 @@ const RegisterForm = () => {
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
-            style={{borderWidth: 1}}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -55,7 +54,6 @@ const RegisterForm = () => {
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
-            style={{borderWidth: 1}}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -75,7 +73,6 @@ const RegisterForm = () => {
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
-            style={{borderWidth: 1}}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -91,7 +88,6 @@ const RegisterForm = () => {
         control={control}
         render={({field: {onChange, onBlur, value}}) => (
           <TextInput
-            style={{borderWidth: 1}}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -102,7 +98,7 @@ const RegisterForm = () => {
         name="full_name"
       />
 
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+      <Button title="Register" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 };
