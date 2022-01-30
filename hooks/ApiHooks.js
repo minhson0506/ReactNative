@@ -90,7 +90,7 @@ const useUser = () => {
 };
 
 const useTag = () => {
-  const postTag = async (tagData, data) => {
+  const postTag = async (tagData, token) => {
     const options = {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'x-access-token': token},
