@@ -21,15 +21,15 @@ const Profile = () => {
     }
   };
 
-  const createAvatar = async (mediaId) => {
-    const data = {file_id: mediaId, tag: 'avatar_' + user.user_id};
-    try {
-      const result = await postTag(data, 'token');
-      console.log('create avatar' + result);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
+  // const createAvatar = async (mediaId) => {
+  //   const data = {file_id: mediaId, tag: 'avatar_' + user.user_id};
+  //   try {
+  //     const result = await postTag(data, 'token');
+  //     console.log('create avatar' + result);
+  //   } catch (err) {
+  //     console.error(err.message);
+  //   }
+  // };
 
   useEffect(() => {
     fetchAvatar();
