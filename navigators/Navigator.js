@@ -8,6 +8,7 @@ import Single from '../views/Single';
 import Login from '../views/Login';
 import {MainContext} from '../contexts/MainContext';
 import {Icon} from 'react-native-elements';
+import ModifyUser from '../views/ModifyUser';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -51,9 +52,17 @@ const StackScreen = () => {
             options={{headerShown: false}}
           ></Stack.Screen>
           <Stack.Screen name="Single" component={Single}></Stack.Screen>
+          <Stack.Screen
+            name="Modify user"
+            component={ModifyUser}
+          ></Stack.Screen>
         </>
       ) : (
-        <Stack.Screen name="Login" component={Login}></Stack.Screen>
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        ></Stack.Screen>
       )}
     </Stack.Navigator>
   );

@@ -5,8 +5,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTag} from '../hooks/ApiHooks';
 import {uploadsUrl} from '../utils/variables';
 import {Avatar, Button, Card, ListItem, Text} from 'react-native-elements';
+import {PropTypes} from 'prop-types';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   const {setIsLoggedIn, user} = useContext(MainContext);
   const {getFileByTag, postTag} = useTag();
   const [avatar, setAvatar] = useState('http://placekitten.com/640');
@@ -66,6 +67,12 @@ const Profile = () => {
         <Text>{user.full_name}</Text>
       </ListItem>
       <Button title={'Logout'} onPress={logOut} />
+      <Button
+        title="Modify user"
+        onPress={() => {
+          navigation.navigate('Modify user');
+        }}
+      ></Button>
     </Card>
   );
 };
@@ -73,5 +80,9 @@ const Profile = () => {
 const styles = StyleSheet.create({
   image: {width: '100%', height: undefined, aspectRatio: 1},
 });
+
+Profile.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default Profile;

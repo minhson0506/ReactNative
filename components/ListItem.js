@@ -6,6 +6,7 @@ import {Avatar, ListItem as RNEListItem} from 'react-native-elements';
 const ListItem = ({navigation, singleMedia}) => {
   return (
     <RNEListItem
+      bottomDivider
       onPress={() => {
         navigation.navigate('Single', {file: singleMedia});
       }}

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
   KeyboardAvoidingView,
@@ -13,9 +13,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUser} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {Card} from 'react-native-elements';
+import {ButtonGroup, Card} from 'react-native-elements';
 
 const Login = ({navigation}) => {
+  const [formToggle, setFormToggle] = useState(true);
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {getUserByToken} = useUser();
 
@@ -49,15 +50,25 @@ const Login = ({navigation}) => {
       >
         <View style={styles.form}>
           <Card>
-            <Card.Title h4>Login</Card.Title>
-            <Card.Divider />
-            <LoginForm />
+            <ButtonGroup
+              onPress={() => setFormToggle(!formToggle)}
+              selectedIndex={formToggle ? 0 : 1}
+              buttons={['Login', 'Register']}
+            />
           </Card>
-          <Card>
-            <Card.Title h4>Register</Card.Title>
-            <Card.Divider />
-            <RegisterForm />
-          </Card>
+          {formToggle ? (
+            <Card>
+              <Card.Title h4>Login</Card.Title>
+              <Card.Divider />
+              <LoginForm />
+            </Card>
+          ) : (
+            <Card>
+              <Card.Title h4>Register</Card.Title>
+              <Card.Divider />
+              <RegisterForm setFormToggle={setFormToggle} />
+            </Card>
+          )}
         </View>
       </KeyboardAvoidingView>
     </TouchableOpacity>
@@ -67,11 +78,15 @@ const Login = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     padding: 16,
   },
+  appTitle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   form: {
-    flex: 0,
+    flex: 8,
   },
 });
 

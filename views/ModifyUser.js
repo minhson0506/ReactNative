@@ -1,12 +1,15 @@
-import React from 'react';
-import {View, Alert} from 'react-native';
+import React, {useContext} from 'react';
+import {Alert, View} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import {useUser} from '../hooks/ApiHooks';
 import {Input, Button} from 'react-native-elements';
-import PropTypes from 'prop-types';
+import {MainContext} from '../contexts/MainContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PropTypes} from 'prop-types';
 
-const RegisterForm = () => {
-  const {postUser} = useUser();
+const ModifyUser = ({navigation}) => {
+  const {checkUsername, putUser} = useUser();
+  const {user, setUser} = useContext(MainContext);
   const {
     control,
     handleSubmit,
@@ -14,11 +17,11 @@ const RegisterForm = () => {
     getValues,
   } = useForm({
     defaultValues: {
-      username: '',
+      username: user.username,
       password: '',
       confirmPassword: '',
-      email: '',
-      full_name: '',
+      email: user.email,
+      full_name: user.full_name,
     },
     mode: 'onBlur',
   });
@@ -27,29 +30,36 @@ const RegisterForm = () => {
     console.log(data);
     try {
       delete data.confirmPassword;
-      const userData = await postUser(data);
-      console.log('add new user' + userData);
-      if (userData) {
-        Alert.alert('Success', 'User created successfully');
+      if (data.password === '') {
+        delete data.password;
       }
-    } catch (err) {
-      console.error(err);
+      const userToken = await AsyncStorage.getItem('userToken');
+      const userData = await putUser(data, userToken);
+      if (userData) {
+        Alert.alert('Success', userData.message);
+        delete data.password;
+        setUser(data);
+        navigation.navigate('Profile');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
+
   return (
     <View>
       <Controller
         control={control}
         rules={{
-          required: {value: true, message: 'This is required'},
-          minLenth: {
+          required: {value: true, message: 'This is required.'},
+          minLength: {
             value: 3,
             message: 'Username has to be at least 3 characters.',
           },
           validate: async (value) => {
             try {
               const available = await checkUsername(value);
-              if (available) {
+              if (available || user.username === value) {
                 return true;
               } else {
                 return 'Username is already taken.';
@@ -75,7 +85,6 @@ const RegisterForm = () => {
       <Controller
         control={control}
         rules={{
-          required: {value: true, message: 'This is required.'},
           minLength: {
             value: 5,
             message: 'Password has to be at least 5 characters.',
@@ -104,7 +113,6 @@ const RegisterForm = () => {
       <Controller
         control={control}
         rules={{
-          required: {value: true, message: 'This is required.'},
           validate: (value) => {
             const {password} = getValues();
             if (value === password) {
@@ -173,13 +181,13 @@ const RegisterForm = () => {
         name="full_name"
       />
 
-      <Button title="Register" onPress={handleSubmit(onSubmit)} />
+      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 };
 
-RegisterForm.propTypes = {
-  setFormToggle: PropTypes.func,
+ModifyUser.propTypes = {
+  navigation: PropTypes.object,
 };
 
-export default RegisterForm;
+export default ModifyUser;

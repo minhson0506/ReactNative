@@ -23,7 +23,8 @@ const useMedia = () => {
   const loadMedia = async (start = 0, limit = 10) => {
     try {
       const response = await fetch(
-        baseUrl + 'media' + '?start=' + start + '&limit=' + limit
+        `${baseUrl}media?start=${start}&limit=${limit}`
+        // baseUrl + 'media' + '?start=' + start + '&limit=' + limit
       );
       if (!response.ok) {
         throw Error(response.statusText);
@@ -36,7 +37,6 @@ const useMedia = () => {
           return mediaData;
         })
       );
-
       setMediaArray(media);
     } catch (error) {
       console.error(error);
@@ -86,7 +86,24 @@ const useUser = () => {
     return userData;
   };
 
-  return {getUserByToken, postUser};
+  const putUser = async (data, token) => {
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(data),
+    };
+    return await doFetch(baseUrl + 'users', options);
+  };
+
+  const checkUsername = async (username) => {
+    const result = await doFetch(baseUrl + 'users/username/' + username);
+    return result.available;
+  };
+
+  return {getUserByToken, postUser, putUser, checkUsername};
 };
 
 const useTag = () => {
