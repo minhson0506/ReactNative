@@ -16,7 +16,7 @@ const Upload = ({navigation}) => {
     'https://place-hold.it/300x200&text=ChooseFile'
   );
   const [imageSelected, setImageSelected] = useState(false);
-  const [type, setType] = useState('');
+  const [type, setType] = useState('image');
   const {postMedia, loading} = useMedia();
   const {postTag} = useTag();
   const {update, setUpdate} = useContext(MainContext);
