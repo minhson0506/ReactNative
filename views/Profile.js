@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet} from 'react-native';
+import {ActivityIndicator, ScrollView, StyleSheet} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTag} from '../hooks/ApiHooks';
@@ -38,42 +38,50 @@ const Profile = ({navigation}) => {
     //createAvatar(95); // just for testing
   }, []);
 
-  const logOut = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch (err) {
-      console.error(err);
-    }
-    setIsLoggedIn(false);
-  };
+  // const logOut = async () => {
+  //   try {
+  //     await AsyncStorage.clear();
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  //   setIsLoggedIn(false);
+  // };
 
   console.log('Profile', user);
   return (
-    <Card>
-      <Card.Title>
-        <Text h1>{user.username}</Text>
-      </Card.Title>
-      <Card.Image
-        source={{uri: avatar}}
-        style={styles.image}
-        PlaceholderContent={<ActivityIndicator></ActivityIndicator>}
-      />
-      <ListItem>
-        <Avatar icon={{name: 'email', color: 'black'}} />
-        <Text>{user.email}</Text>
-      </ListItem>
-      <ListItem>
-        <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}} />
-        <Text>{user.full_name}</Text>
-      </ListItem>
-      <Button title={'Logout'} onPress={logOut} />
-      <Button
-        title="Modify user"
-        onPress={() => {
-          navigation.navigate('Modify user');
-        }}
-      ></Button>
-    </Card>
+    <ScrollView>
+      <Card>
+        <Card.Title>
+          <Text h1>{user.username}</Text>
+        </Card.Title>
+        <Card.Image
+          source={{uri: avatar}}
+          style={styles.image}
+          PlaceholderContent={<ActivityIndicator />}
+        />
+        <ListItem>
+          <Avatar icon={{name: 'email', color: 'black'}} />
+          <Text>{user.email}</Text>
+        </ListItem>
+        <ListItem>
+          <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}} />
+          <Text>{user.full_name}</Text>
+        </ListItem>
+        <Button
+          title="Log out!"
+          onPress={async () => {
+            await AsyncStorage.clear();
+            setIsLoggedIn(false);
+          }}
+        />
+        <Button
+          title="Modify user"
+          onPress={() => {
+            navigation.navigate('Modify user');
+          }}
+        />
+      </Card>
+    </ScrollView>
   );
 };
 

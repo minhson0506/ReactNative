@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 40,
   },
+  description: {
+    marginBottom: 10,
+  },
 });
 
 Single.propTypes = {route: PropTypes.object};

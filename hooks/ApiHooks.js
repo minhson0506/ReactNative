@@ -1,5 +1,6 @@
-import {useEffect, useState} from 'react';
-import {baseUrl} from '../utils/variables';
+import {useContext, useEffect, useState} from 'react';
+import {MainContext} from '../contexts/MainContext';
+import {appId, baseUrl} from '../utils/variables';
 
 const doFetch = async (url, options = {}) => {
   try {
@@ -20,36 +21,58 @@ const doFetch = async (url, options = {}) => {
 
 const useMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const {update} = useContext(MainContext);
   const loadMedia = async (start = 0, limit = 10) => {
+    setLoading(true);
     try {
-      const response = await fetch(
-        `${baseUrl}media?start=${start}&limit=${limit}`
-        // baseUrl + 'media' + '?start=' + start + '&limit=' + limit
-      );
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
-      const json = await response.json();
+      // const response = await fetch(
+      //   `${baseUrl}media?start=${start}&limit=${limit}`
+      //   // baseUrl + 'media' + '?start=' + start + '&limit=' + limit
+      // );
+      // if (!response.ok) {
+      //   throw Error(response.statusText);
+      // }
+      const json = await useTag().getFileByTag(appId);
       const media = await Promise.all(
         json.map(async (item) => {
           const response = await fetch(baseUrl + 'media/' + item.file_id);
           const mediaData = await response.json();
+          console.log(mediaData);
           return mediaData;
         })
       );
       setMediaArray(media);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
     console.log(mediaArray);
   };
 
   // Call loadMedia() only once when the component is loaded
+  // Or when update state is changed
   useEffect(() => {
     loadMedia(0, 5);
-  }, []);
+  }, [update]);
 
-  return {mediaArray};
+  const postMedia = async (formData, token) => {
+    setLoading(true);
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'x-access-token': token,
+      },
+      body: formData,
+    };
+    const result = await doFetch(baseUrl + 'media', options);
+    result && setLoading(false);
+    return result;
+  };
+
+  return {mediaArray, postMedia, loading};
 };
 
 const useLogin = () => {

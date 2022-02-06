@@ -5,8 +5,9 @@ import {useUser} from '../hooks/ApiHooks';
 import {Input, Button} from 'react-native-elements';
 import PropTypes from 'prop-types';
 
-const RegisterForm = () => {
-  const {postUser} = useUser();
+const RegisterForm = ({setFormToggle}) => {
+  const {postUser, checkUsername} = useUser();
+
   const {
     control,
     handleSubmit,
@@ -31,11 +32,13 @@ const RegisterForm = () => {
       console.log('add new user' + userData);
       if (userData) {
         Alert.alert('Success', 'User created successfully');
+        setFormToggle(true);
       }
     } catch (err) {
       console.error(err);
     }
   };
+
   return (
     <View>
       <Controller
