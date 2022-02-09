@@ -45,6 +45,7 @@ const useMedia = () => {
       setMediaArray(media);
     } catch (error) {
       console.error(error);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -62,8 +63,8 @@ const useMedia = () => {
     const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'multipart/form-data',
         'x-access-token': token,
+        'Content-Type': 'multipart/form-data',
       },
       body: formData,
     };

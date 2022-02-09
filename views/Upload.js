@@ -85,6 +85,7 @@ const Upload = ({navigation}) => {
 
     try {
       const token = await AsyncStorage.getItem('userToken');
+      console.log('token when upload', token);
       const response = await postMedia(formData, token);
       console.log('upload response', response);
       const tagResponse = await postTag(
@@ -107,6 +108,19 @@ const Upload = ({navigation}) => {
         ]);
     } catch (error) {
       // Notify user about the problem
+      Alert.alert(
+        ('File',
+        'uploaded fail',
+        [
+          {
+            text: 'Not Ok',
+            onPress: () => {
+              setUpdate(update + 1);
+              navigation.navigate('Upload');
+            },
+          },
+        ])
+      );
       console.log('onSubmit upload image has problem');
     }
   };
