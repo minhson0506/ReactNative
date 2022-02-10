@@ -100,13 +100,22 @@ const useUser = () => {
     return userData;
   };
 
+  const getUserById = async (userId, token) => {
+    const options = {
+      method: 'GET',
+      headers: {'x-access-token': token},
+    };
+    const userData = await doFetch(baseUrl + 'users/' + userId, options);
+    return userData;
+  };
+
   const postUser = async (data) => {
     const options = {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data),
     };
-    const userData = await doFetch(baseUrl + 'users', options);
+    const userData = await doFetch(baseUrl + 'users/', options);
     return userData;
   };
 
@@ -127,7 +136,7 @@ const useUser = () => {
     return result.available;
   };
 
-  return {getUserByToken, postUser, putUser, checkUsername};
+  return {getUserByToken, postUser, putUser, checkUsername, getUserById};
 };
 
 const useTag = () => {
@@ -147,4 +156,34 @@ const useTag = () => {
   return {postTag, getFileByTag, postTag};
 };
 
-export {useMedia, useLogin, useUser, useTag};
+// https://media.mw.metropolia.fi/wbma/docs/#api-Favourite-GetFileFavourites
+const useFavourite = () => {
+  const postFavourite = async (fileId, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify({file_id: fileId}),
+    };
+    return await doFetch(`${baseUrl}favourites`, options);
+  };
+
+  const getFavouriteByFileId = async (fileId) => {
+    return await doFetch(`${baseUrl}favourites/file/${fileId}`);
+  };
+
+  const deleteFavourite = async (fileId, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    return await doFetch(`${baseUrl}favourites/file/${fileId}`, options);
+  };
+  return {postFavourite, getFavouriteByFileId, deleteFavourite};
+};
+
+export {useMedia, useLogin, useUser, useTag, useFavourite};

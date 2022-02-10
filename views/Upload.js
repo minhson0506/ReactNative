@@ -115,7 +115,6 @@ const Upload = ({navigation}) => {
           {
             text: 'Not Ok',
             onPress: () => {
-              setUpdate(update + 1);
               navigation.navigate('Upload');
             },
           },
