@@ -1,11 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {ActivityIndicator, ScrollView, StyleSheet} from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {ActivityIndicator, Alert, ScrollView, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsUrl} from '../utils/variables';
 import {Avatar, Card, ListItem, Text, Button} from 'react-native-elements';
 import {Video} from 'expo-av';
 import {useFavourite, useTag, useUser} from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {MainContext} from '../contexts/MainContext';
 
 const Single = ({route}) => {
   const {file} = route.params;
@@ -17,6 +18,7 @@ const Single = ({route}) => {
   const [avatar, setAvatar] = useState('http://placekitten.com/640');
   const [likes, setLikes] = useState([]);
   const [userLike, setUserLike] = useState(false);
+  const {user} = useContext(MainContext);
 
   const fetchOwner = async () => {
     try {
@@ -25,6 +27,7 @@ const Single = ({route}) => {
       setOwner(userData);
     } catch (error) {
       // TODO: how should user be notified?
+      Alert.alert([{text: 'Load owner failed'}]);
       console.error('fetch owner error', error);
       setOwner({username: '[not available]'});
     }
@@ -48,10 +51,16 @@ const Single = ({route}) => {
     try {
       const likesData = await getFavouriteByFileId(file.file_id);
       setLikes(likesData);
-      // TODO: check if user id of of logged in user is included in data and
+      // check if user id of of logged in user is included in data and
       // set state userLike accordingly
+      likesData.forEach((element) => {
+        // if (element.user_id === user.user_id) {
+        //   setUserLike(true);
+        // }
+        element.user_id === user.user_id && setUserLike(true);
+      });
     } catch (error) {
-      // TODO: how should user be notified?
+      Alert.alert([{text: 'Load favourite failed'}]);
       console.error('fetchLikes() error', error);
     }
   };
@@ -59,9 +68,14 @@ const Single = ({route}) => {
   const createFavourite = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      await postFavourite(file.file_id, token);
+      const response = await postFavourite(file.file_id, token);
+      console.log('create Favourite response', response);
+      // if (response) {
+      //   setUserLike(true);
+      // }
+      response && setUserLike(true);
     } catch (error) {
-      // TODO: what to do if user has liked this image already?
+      Alert.alert([{text: 'Create favourite failed'}]);
       console.error('createFavourite error', error);
     }
   };
@@ -69,9 +83,10 @@ const Single = ({route}) => {
   const removeFavourite = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      await deleteFavourite(file.file_id, token);
+      const response = await deleteFavourite(file.file_id, token);
+      response && setUserLike(false);
     } catch (error) {
-      // TODO: what to do if user has not liked this image already?
+      Alert.alert([{text: 'Remove favourite failed'}]);
       console.error('removeFavourite error', error);
     }
   };
@@ -79,8 +94,11 @@ const Single = ({route}) => {
   useEffect(() => {
     fetchOwner();
     fetchAvatar();
-    fetchLikes();
   }, []);
+
+  useEffect(() => {
+    fetchLikes();
+  }, [userLike]);
 
   return (
     <ScrollView>
@@ -88,20 +106,20 @@ const Single = ({route}) => {
         <Card.Title h4>{file.title}</Card.Title>
         <Card.Title>{file.time_added}</Card.Title>
         <Card.Divider />
-        {file.media_type == 'image' ? (
+        {file.media_type === 'image' ? (
           <Card.Image
             source={{uri: uploadsUrl + file.filename}}
             style={styles.image}
-            PlaceholderContent={<ActivityIndicator></ActivityIndicator>}
+            PlaceholderContent={<ActivityIndicator />}
           />
         ) : (
           <Video
             ref={videoRef}
             style={styles.image}
             source={{
-              //uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
               uri: uploadsUrl + file.filename,
             }}
+            // usePoster not working in IOS now..
             // usePoster
             posterSource={{
               uri: uploadsUrl + file.screenshot,
@@ -110,7 +128,7 @@ const Single = ({route}) => {
             isLooping
             resizeMode="contain"
             onError={(error) => {
-              console.error('Video error:', error);
+              console.error('<Video> error', error);
             }}
           ></Video>
         )}

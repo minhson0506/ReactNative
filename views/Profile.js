@@ -9,7 +9,7 @@ import {PropTypes} from 'prop-types';
 
 const Profile = ({navigation}) => {
   const {setIsLoggedIn, user} = useContext(MainContext);
-  const {getFileByTag, postTag} = useTag();
+  const {getFileByTag} = useTag();
   const [avatar, setAvatar] = useState('http://placekitten.com/640');
 
   const fetchAvatar = async () => {
@@ -80,6 +80,12 @@ const Profile = ({navigation}) => {
             navigation.navigate('Modify user');
           }}
         />
+        <Button
+          title="My Files"
+          onPress={() => {
+            navigation.navigate('My Files');
+          }}
+        ></Button>
       </Card>
     </ScrollView>
   );
